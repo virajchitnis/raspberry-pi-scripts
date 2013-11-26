@@ -34,6 +34,8 @@ do_install () {
 	sed -i -re 's/(\"password\" :\ )([a-z]+)*(.*)/\1\"'${PASS}'\"/g' btsync.config
 
 	mkdir .sync
+	
+	echo "[+] Starting BitTorrent Sync Server"
 	./btsync --config btsync.config
 
 	echo "[+] Cleaning up"
