@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Warning!!!
+# This script works but throws an error towards the end. If you receive such an error, please run the bt_sync_server_fix.sh script after running this script. This is a temporary fix until I can fix this script to do its job properly.
+
 # Note: This script must be run as root.
 
 # Script to build a Raspberry Pi BitTorrent Sync server.
