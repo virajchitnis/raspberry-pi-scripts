@@ -11,11 +11,11 @@ To use these scripts, you can either clone the repository or download a zip file
 
 The scripts and their uses are described below:
 
-add_samba_share.sh - Creates a new NAS (samba) share.
-
 bittorrent_server.sh - Installs the transmission bittorrent client and samba so that you can download torrents and then access them from your PC/Mac/Linux computer via NAS.
 
 bittorrent_sync_server.sh - Installs BitTorrent Sync so that you can sync files between computers. You will need to have BitTorrent Sync clients for your PC/Mac as well to be able to use this. For more info about BitTorrent Sync, visit http://www.bittorrent.com/sync
+
+nas_server.sh - Creates a new NAS (samba) share or adds to an existing one.
 
 If you need a script for any specific task, feel free to send in your request, I will try to provide a script for your requested task, but can give no guarantee on whether or not and how soon I will be able to do so.
 
