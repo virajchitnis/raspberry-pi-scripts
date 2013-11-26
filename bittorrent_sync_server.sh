@@ -34,6 +34,7 @@ case "$1" in
                 kill -9 ${PID}
                 ;;
         *)
+        	echo "Usage: service btsync {start|restart|stop}"
                 echo "Usage: /etc/init.d/btsync {start|restart|stop}"
                 exit 1
                 ;;
