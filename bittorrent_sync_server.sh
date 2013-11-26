@@ -8,6 +8,43 @@
 # 	If you are doing it as a normal user, you will need to do 'sudo nano /opt/btsync/btsync.config'.
 #	If you are doing it as root, then skip the 'sudo' keyword.
 
+start_up_script () {
+	echo "[+] Creating system service for BitTorrent Sync Server"
+	echo "#!/bin/sh
+# /etc/init.d/btsync
+#
+
+case "$1" in
+        start)
+                echo "Starting BitTorrent Sync Server"
+                cd /opt/btsync
+                ./btsync --config btsync.config
+                ;;
+        restart)
+                echo "Stopping BitTorrent Sync Server"
+                PID=$(pidof btsync)
+                kill -9 ${PID}
+                echo "Starting BitTorrent Sync Server"
+                cd /opt/btsync
+                ./btsync --config btsync.config
+                ;;
+        stop)
+                echo "Stopping BitTorrent Sync Server"
+                PID=$(pidof btsync)
+                kill -9 ${PID}
+                ;;
+        *)
+                echo "Usage: /etc/init.d/btsync {start|restart|stop}"
+                exit 1
+                ;;
+esac
+
+exit 0" >> /etc/init.d/btsync
+
+	chmod +x /etc/init.d/btsync
+	update-rc.d btsync defaults
+}
+
 do_install () {
 	echo "[+] Creating install directory"
 	mkdir /opt/btsync
@@ -35,8 +72,10 @@ do_install () {
 
 	mkdir .sync
 	
+	start_up_script
+	
 	echo "[+] Starting BitTorrent Sync Server"
-	./btsync --config btsync.config
+	service btsync start
 
 	echo "[+] Cleaning up"
 	rm btsync_arm.tar.gz
