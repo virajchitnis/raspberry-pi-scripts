@@ -51,11 +51,14 @@ do_add_share () {
         guest ok = no
         valid users = ${USERS}
         force user = root" >> /etc/samba/smb.conf
+
+	echo "[+] Restarting Samba"
+	service samba restart
 }
 
 if [ ! $(whoami) = "root" ]; then
         echo "[-] This script must be run as root."
-        echo "[-] Run this script again with sudo, eg. 'sudo ./bittorrent_server.sh'"
+        echo "[-] Run this script again with sudo, eg. 'sudo ./nas_server.sh'"
 else
         do_add_share
 fi

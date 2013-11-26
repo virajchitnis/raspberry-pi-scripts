@@ -8,8 +8,6 @@
 # You can access the NAS by connecting to 'smb://<ip of your pi>/Transmission' using your preferred client and entering your chosen username and password.
 # For Windows OSs the NAS link will be '\\<ip of your pi>\Transmission'.
 
-DOWNLOAD_DIR=/srv/transmission				// Directory to save torrents in
-
 do_install () {
 	echo "[+] Update system? [y/n]: "
 	read UPDATE
@@ -26,7 +24,7 @@ do_install () {
 	service transmission-daemon stop
 	sed -i -re 's/(rpc-authentication-required\":\ )([a-z]+)*/\1false/g' /etc/transmission-daemon/settings.json
 	sed -i -re 's/(rpc-whitelist-enabled\":\ )([a-z]+)*/\1false/g' /etc/transmission-daemon/settings.json
-	sed -i -re 's/(download-dir\":\ )([a-z]+)*(.*)/\1\"'${DOWNLOAD_DIR////\/}'\",/g' /etc/transmission-daemon/settings.json
+	sed -i -re 's/(download-dir\":\ )([a-z]+)*(.*)/\1\"\/srv\/transmission\",/g' /etc/transmission-daemon/settings.json
 	service transmission-daemon start
 
 	echo "[+] Enter the non root user account (default on the Raspberry Pi is 'pi'): "
@@ -36,13 +34,13 @@ do_install () {
 	smbpasswd -a ${SMBUSER}
 
 	echo "[+] Setting up Samba share"
-	mkdir ${DOWNLOAD_DIR}
-	chown debian-transmission ${DOWNLOAD_DIR}
-	chmod -R 0777 ${DOWNLOAD_DIR}
+	mkdir /srv/transmission
+	chown debian-transmission /srv/transmission
+	chmod -R 0777 /srv/transmission
 
 	echo "[Transmission]
    comment=Transmission downloads folder
-   path=${DOWNLOAD_DIR}
+   path=/srv/transmission
    writeable=Yes
    create mask=0777
    directory mask=0777

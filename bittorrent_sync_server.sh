@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Warning!!!
-# This script works but throws an error towards the end. If you receive such an error, please run the bt_sync_server_fix.sh script after running this script. This is a temporary fix until I can fix this script to do its job properly.
-
 # Note: This script must be run as root.
 
 # Script to build a Raspberry Pi BitTorrent Sync server.
@@ -34,7 +31,7 @@ do_install () {
 
 	sed -i -re 's/(\"storage_path\" :\ )([a-z]+)*(.*)/\1\"\/opt\/btsync\/.sync\",/g' btsync.config
 	sed -i -re 's/(\"login\" :\ )([a-z]+)*(.*)/\1\"'${USER}'\",/g' btsync.config
-	sed -i -re 's/(\"password\" :\ )([a-z]+)*(.*)/\1\"'${PASS}'\",/g' btsync.config
+	sed -i -re 's/(\"password\" :\ )([a-z]+)*(.*)/\1\"'${PASS}'\"/g' btsync.config
 
 	mkdir .sync
 	./btsync --config btsync.config
@@ -45,7 +42,7 @@ do_install () {
 
 if [ ! $(whoami) = "root" ]; then
         echo "[-] This script must be run as root."
-        echo "[-] Run this script again with sudo, eg. 'sudo ./bittorrent_server.sh'"
+        echo "[-] Run this script again with sudo, eg. 'sudo ./bittorrent_sync_server.sh'"
 else
         do_install
 fi
