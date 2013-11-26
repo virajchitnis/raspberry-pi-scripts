@@ -7,6 +7,17 @@
 # The location of this share will be 'smb://<ip of your pi>/<share name>' or '\\<ip of your pi>\<share name>' for Windows OSs.
 
 do_add_share () {
+	echo "[+] Update system? [y/n]: "
+        read UPDATE
+        if [ ${UPDATE} = "y" ]; then
+                echo "[+] Updating System"
+                apt-get update
+                apt-get -y dist-upgrade
+        fi
+
+        echo "[+] Installing Samba if it does not exist"
+        apt-get -y install samba samba-common-bin
+
 	USERS=""
 
 	echo "[+] Enter the directory to create Samba share on: "
@@ -14,6 +25,9 @@ do_add_share () {
 
 	echo "[+] Enter the name of the share: "
 	read SHARE
+
+	echo "[+] Description for the share, not longer than 2-3 words: "
+	read COMMENT
 
 	echo "[+] You will be continuously prompted to enter users until you enter -1"
 	echo "[+] Enter a user: "
@@ -29,21 +43,14 @@ do_add_share () {
 		mkdir -p ${DIR}
 	fi
 
-	chmod -R 0777 ${DIR}
-
 	echo "[+] Registering Share with Samba"
 	echo "[${SHARE}]
-	comment = Network Attached Storage
+        comment = ${COMMENT}
         path = ${DIR}
-        writeable = yes
-        create mask = 0777
-        create mode = 0777
-        directory mask = 0777
-        directory mode = 0777
-        browseable = yes
-        public = no
-        share modes = yes
-        valid users =${USERS}" >> /etc/samba/smb.conf
+        read only = no
+        guest ok = no
+        valid users = ${USERS}
+        force user = root" >> /etc/samba/smb.conf
 }
 
 if [ ! $(whoami) = "root" ]; then
